@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # --- 1. 定義 CNN 模型 (Encoder-Decoder 架構) ---
 
-def build_cfd_cnn_model(input_shape=(64, 64, 2)):
+def build_cfd_cnn_model(input_shape=(2048, 2048, 2)):
     """
     建立一個簡化的 Encoder-Decoder CNN 模型，用於CFD問題。
 
@@ -100,7 +100,7 @@ def generate_mock_cfd_data(num_samples=100, grid_size=64):
 # --- 3. 執行模型訓練和預測 ---
 if __name__ == "__main__":
     # --- A. 準備數據 ---
-    NUM_SAMPLES = 200 # 生成的數據樣本數
+    NUM_SAMPLES = 50 # 生成的數據樣本數
     GRID_SIZE = 64    # 網格大小
     X_data, Y_data = generate_mock_cfd_data(NUM_SAMPLES, GRID_SIZE)
 
@@ -113,6 +113,8 @@ if __name__ == "__main__":
 
     print(f"訓練集形狀 (X_train): {X_train.shape}, (Y_train): {Y_train.shape}")
     print(f"測試集形狀 (X_test): {X_test.shape}, (Y_test): {Y_test.shape}")
+    print(f"NUM_SAMPLES : ", NUM_SAMPLES,f"GRID_SIZE : " ,GRID_SIZE)
+    
 
     # --- B. 建立和訓練模型 ---
     model = build_cfd_cnn_model(input_shape=(GRID_SIZE, GRID_SIZE, 2))
@@ -120,8 +122,8 @@ if __name__ == "__main__":
 
     print("\n--- 開始訓練模型 ---")
     history = model.fit(X_train, Y_train,
-                        epochs=50,          # 訓練輪次
-                        batch_size=8,       # 每次更新模型的樣本數
+                        epochs=100,          # 訓練輪次
+                        batch_size=10,       # 每次更新模型的樣本數
                         validation_split=0.1, # 從訓練集中分出10%作為驗證集
                         verbose=1)
 
