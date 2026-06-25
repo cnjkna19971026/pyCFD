@@ -156,16 +156,6 @@ xf2 = np.linspace(0, L, 8)
 #fig1,ax1 = plt.subplots()
 #fig2,ax2 = plt.subplots()
 
-#fig ,(ax1 , ax2) = plt.subplots(1,2,figsize = (12,5))
-#
-#ax1.plot(xf*1e3, analytical(xf), 'k-', label='Analytical')
-#ax2.plot(xf1*1e3, analytical(xf1), 'k-', label='Analytical')
-#ax1.plot(xc*1e3, T, 'ro', ms=6, label='FVM (N=20)')
-#ax2.plot(xc_error*1e3, T_error, 'ro',linestyle=':', ms=6, label='FVM_error (N=20)')
-#ax1.set_xlabel('x [mm]'); ax1.set_ylabel('T [K]'); ax1.legend(); ax1.grid(True)
-#ax2.set_xlabel('x [mm]'); ax2.set_ylabel('T [K]'); ax2.legend(); ax2.grid(True)
-#ax1.set_title('1D Steady Conduction with Volumetric Source')
-#ax2.set_title('error case')
 
 fig ,(ax1 , ax2) = plt.subplots(1,2,figsize = (12,5))
 
