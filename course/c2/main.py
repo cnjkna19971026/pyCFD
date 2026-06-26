@@ -15,7 +15,7 @@ u2 = np.zeros(nx)
 un = np.zeros(nx)
 un2 = np.zeros(nx)
 # wave equ para
-nt = 25
+nt = 2500000
 dt = .025
 c  = 1 
 
@@ -36,7 +36,7 @@ Tn2 = np.zeros(nx)
 
 #nt = 25
 #dt = .025
-S = 1e8
+S = 1e2
 k = 20
 T[0]  = 100
 T[nx-1] = 100
@@ -45,9 +45,16 @@ print(T)
 def heat_equ(T,Tn):
     for n in range(nt):
         Tn = T.copy()
-        for i in range( nx):
-            T[i] = T[i-1] + (S/k)*(dx**2)
+        for i in range(nx-2):
+            T[i+1] =(T[i] + T[i+2])/2 + (S/(k*2))*(dx**2)
     return T 
+
+#def heat_equ(T,Tn):
+#    for n in range(nt):
+#        Tn = T.copy()
+#        for i in range(nx-2):
+#            T[i] = 2*T[i+1]- T[i+2]+ (S/k)*(dx**2)
+#    return T 
 
 def wave_equ(u,un):
     for n in range(nt):
