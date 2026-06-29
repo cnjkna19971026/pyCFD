@@ -2,59 +2,73 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import time,sys
-
-
-
 # normal para
-nx = 41
-L = 2
-dx = L/(nx-1)
+nx = 40
+L = 2;dx = L/(nx-1)
 
 u = np.ones(nx)
 u2 = np.zeros(nx)
 un = np.zeros(nx)
 un2 = np.zeros(nx)
 # wave equ para
-nt = 2500000
+# nt = 2500000
 dt = .025
 c  = 1 
 
 # initial condition
 u2[int(.5/dx):int(1/dx + 1)] = 2
 u[int(.5/dx):int(1/dx + 1)] = 2
-#print(u)
 
+# heat equ para for analytical
+T   = np.ones(nx)
+T_left  = 100
+T_right = 100
+T[0]  = T_left
+T[nx-1] = T_right
 
-#print(un)
+Tana = lambda x : T_left + (T_right - T_left)*x/L + S/(2*k)*x*(L-x)  
 
-# heat equ para
+def std_heat_equ(nx):
 
-T = np.ones(nx)
-T2 = np.zeros(nx)
-Tn = np.zeros(nx)
-Tn2 = np.zeros(nx)
+    S = 1e8;k = 150 ;rho = 2.33 ; Cp = 0.75 
+    L = 2;dx = L/(nx-1)
+    T_left  = 100
+    T_right = 100
 
-#nt = 25
-#dt = .025
-S = 1e2
-k = 20
-T[0]  = 100
-T[nx-1] = 100
-print(T)
+    T   = np.ones(nx)
+    Tn  = np.ones(nx)
+    T[0]  = T_left
+    T[nx-1] = T_right
 
-def heat_equ(T,Tn):
-    for n in range(nt):
+    niter = 25
+    for n in range(niter):
         Tn = T.copy()
         for i in range(nx-2):
             T[i+1] =(T[i] + T[i+2])/2 + (S/(k*2))*(dx**2)
     return T 
 
-#def heat_equ(T,Tn):
-#    for n in range(nt):
-#        Tn = T.copy()
-#        for i in range(nx-2):
-#            T[i] = 2*T[i+1]- T[i+2]+ (S/k)*(dx**2)
-#    return T 
+def tran_heat_equ(nx):
+    S = 1e8;k = 1500 ;rho = 2330 ; Cp = 750 
+    L = 2;dx = L/(nx-1)
+
+    dt = .025
+
+    T_left  = 20
+    T_right = 20
+
+    T   = np.zeros(nx)
+    T[0]  = T_left
+    T[nx-1] = T_right
+
+    niter = 2
+    snap = [T.copy()]
+    for n in range(niter):
+        Tn = T.copy()
+        for i in range(nx-2):
+            T[i+1] = Tn[i+1] + k*dt / (rho*Cp)/dx**2 * (Tn[i+2] - 2*Tn[i+1]+Tn[i]) + S*dt/(rho*Cp)
+        snap.append(T.copy())
+
+    return T
 
 def wave_equ(u,un):
     for n in range(nt):
@@ -68,8 +82,8 @@ def wave_equ(u,un):
 # ====== plot ======
 fig ,(ax1 ,ax2) = plt.subplots(1,2,figsize = (12,5))
 
-ax1.plot(np.linspace(0,2,nx),heat_equ(T,Tn),'-k',marker = 'o',ms = 4 , label = "un wave eque")
-ax2.plot(np.linspace(0,2,nx),wave_equ(u2,un2),'-k',marker = 'o',ms = 4 , label = "un2 wave eque")
+ax1.plot(np.linspace(0,2,nx),std_heat_equ(nx),'-k',marker = 'o',ms = 4 , label = "un wave eque")
+ax2.plot(np.linspace(0,2,nx),tran_heat_equ(nx),'-k',marker = 'o',ms = 4 , label = "un2 wave eque")
 
 ax1.legend()
 ax2.legend()
