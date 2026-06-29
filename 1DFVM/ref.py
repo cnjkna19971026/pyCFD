@@ -109,8 +109,6 @@ for N in [10, 20, 40, 80, 160]:
     print(f"{N:>5} {L/N:>12.2e} {err:>15.4e} {order:>8}")
     prev_err = err
 
-
-
 def gridConvStd(N_list,solve_fvm):
     print(f"{'N':>5} {'dx [m]':>12} {'L2 error [K]':>15} {'order':>8}")
     prev_err = None
@@ -141,20 +139,6 @@ xc_error, T_error = solve_fvm_error(20)
 xf = np.linspace(0, L, 400)
 xf1 = np.linspace(0, L, 4)
 xf2 = np.linspace(0, L, 8)
-
-#fig1,ax1 = plt.subplots()
-
-#plt.figure()
-#plt.plot(xf*1e3, analytical(xf), 'k-', label='Analytical')
-#plt.plot(xc*1e3, T, 'ro', ms=6, label='FVM (N=20)')
-#plt.plot(xc_error*1e3, T_error, 'ro',linestyle=':', ms=6, label='FVM_error (N=20)')
-#plt.xlabel('x [mm]'); plt.ylabel('T [K]'); plt.legend(); plt.grid(True)
-#plt.title('1D Steady Conduction with Volumetric Source')
-
-
-# if you write like this it will show two figure in different wido
-#fig1,ax1 = plt.subplots()
-#fig2,ax2 = plt.subplots()
 
 
 fig ,(ax1 , ax2) = plt.subplots(1,2,figsize = (12,5))
