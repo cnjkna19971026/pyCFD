@@ -31,7 +31,7 @@ def tran_heat_equ(nx):
     T[0]  = T_left
     T[nx-1] = T_right
 
-    niter = 100
+    niter = 1000
     snap = [T.copy()]
     for n in range(niter):
         Tn = T.copy()
@@ -61,7 +61,7 @@ def update(n):
     line.set_ydata(snap[n])
     title.set_text(f"niter = {n}")
     return line, title
-
+# interval
 anim=FuncAnimation(fig, update, frames=len(snap), interval=80, blit=False)
 anim.save("heat_evo.gif", writer="pillow", fps=15)   # 存成 GIF
 

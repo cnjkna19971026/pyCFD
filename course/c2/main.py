@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 
 import time,sys
 # normal para
-nx = 40
+nx = 41
+
 L = 2;dx = L/(nx-1)
 
 u = np.ones(nx)
@@ -12,7 +13,6 @@ un = np.zeros(nx)
 un2 = np.zeros(nx)
 # wave equ para
 # nt = 2500000
-dt = .025
 c  = 1 
 
 # initial condition
@@ -30,17 +30,18 @@ Tana = lambda x : T_left + (T_right - T_left)*x/L + S/(2*k)*x*(L-x)
 
 def std_heat_equ(nx):
 
-    S = 1e8;k = 150 ;rho = 2.33 ; Cp = 0.75 
+    S = 1e3;k = 15 ;rho = 2330 ; Cp = 750 
     L = 2;dx = L/(nx-1)
     T_left  = 100
     T_right = 100
+    dt = 0.025 
 
     T   = np.ones(nx)
-    Tn  = np.ones(nx)
+    #Tn  = np.ones(nx)
     T[0]  = T_left
     T[nx-1] = T_right
-
     niter = 25
+
     for n in range(niter):
         Tn = T.copy()
         for i in range(nx-2):
@@ -48,25 +49,25 @@ def std_heat_equ(nx):
     return T 
 
 def tran_heat_equ(nx):
-    S = 1e8;k = 1500 ;rho = 2330 ; Cp = 750 
+    S = 1e3;k = 15 ;rho = 2330 ; Cp = 750 
     L = 2;dx = L/(nx-1)
 
-    dt = .025
+    dt = 0.025 # 0.025
 
-    T_left  = 20
-    T_right = 20
+    T_left  = 100
+    T_right = 100
 
     T   = np.zeros(nx)
     T[0]  = T_left
     T[nx-1] = T_right
 
-    niter = 2
-    snap = [T.copy()]
+    niter = 25000
+    #snap = [T.copy()]
     for n in range(niter):
         Tn = T.copy()
         for i in range(nx-2):
             T[i+1] = Tn[i+1] + k*dt / (rho*Cp)/dx**2 * (Tn[i+2] - 2*Tn[i+1]+Tn[i]) + S*dt/(rho*Cp)
-        snap.append(T.copy())
+        #snap.append(T.copy())
 
     return T
 
@@ -82,8 +83,8 @@ def wave_equ(u,un):
 # ====== plot ======
 fig ,(ax1 ,ax2) = plt.subplots(1,2,figsize = (12,5))
 
-ax1.plot(np.linspace(0,2,nx),std_heat_equ(nx),'-k',marker = 'o',ms = 4 , label = "un wave eque")
-ax2.plot(np.linspace(0,2,nx),tran_heat_equ(nx),'-k',marker = 'o',ms = 4 , label = "un2 wave eque")
+ax1.plot(np.linspace(0,2,nx),std_heat_equ(nx),'-k',marker = 'o',ms = 4 , label =f" {nx} liter std std_heat_equ")
+ax2.plot(np.linspace(0,2,nx),tran_heat_equ(nx),'-k',marker = 'o',ms = 4 , label = f" {nx} liter trans heat eque")
 
 ax1.legend()
 ax2.legend()

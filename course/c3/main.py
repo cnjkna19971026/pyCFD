@@ -29,19 +29,23 @@ def wave_equ(nx):
         for i in range(1,nx):
             u[i] = un[i] - c*(dt/dx)*(un[i]-un[i-1])
 
-    return u
+    x = np.linspace(0,2,nx)
+    return x ,u
 
+nlist = np.array([41 ,61 , 81 , 101])
 
 fig,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2,figsize=(12,5))
+figlist = [ax1,ax2,ax3,ax4]
 
-x = np.linspace(0,2,41)
-
-ax1.plot(x,wave_equ(41),'-k',marker='x',ms = 2.5,label="wave_equ")
-ax2.plot(x,wave_equ(61),'-k',marker='x',ms = 2.5,label="wave_equ")
-ax3.plot(x,wave_equ(71),'-k',marker='x',ms = 2.5,label="wave_equ")
-ax4.plot(x,wave_equ(81),'-k',marker='x',ms = 2.5,label="wave_equ")
+for ax,i in zip(figlist,nlist): 
+    x , u = wave_equ(i)
+    ax.plot(x,u,'-k',marker='x',ms = 2.5,label=f"{i} liter wave_equ")
+    ax.legend();ax.set_xlabel("x (m)");ax.set_ylabel("u (m/s)")
+   # ax2.plot(x,u),'-k',marker='x',ms = 2.5,label="wave_equ")
+   # ax3.plot(x,u),'-k',marker='x',ms = 2.5,label="wave_equ")
+   # ax4.plot(x,u),'-k',marker='x',ms = 2.5,label="wave_equ")
 
 #ax1.legend();ax1.set_xlabel("x (m)");ax1.set_ylabel("u (m/s)")
-fig.legend();fig.set_xlabel("x (m)");fig.set_ylabel("u (m/s)")
+#fig.legend();fig.set_xlabel("x (m)");fig.set_ylabel("u (m/s)")
 
 plt.show()
