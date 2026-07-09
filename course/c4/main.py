@@ -40,11 +40,11 @@ def burgers_equ(nx=101,nt=100,nu=0.07,t=0.0):
         
     return x,u ,nu , nt ,dt
 
-x0,u0 ,nu,nt,dt= burgers_equ()
+x0,u0 ,nu,nt,dt= burgers_equ(nt = 10,nu=0.01)
 
-u_ana = np.asarray([ufun(nt * dt,xi,nu) for xi in x0])
+u_ana = np.asarray([ufun(nt* dt,xi,nu) for xi in x0])
 
-(x0,u0,nu,nt,dt),elapsed = timeit(burgers_equ,(nt=5,nu=1))
+(x0,u0,nu,nt,dt),elapsed = timeit(burgers_equ,nt=5,nu=0.01)
 
 
 print(u0)

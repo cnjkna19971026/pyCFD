@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time,sys
+from animation import snapshotrecorder , animation_snapshot, probRec
 
 from matplotlib.animation import FuncAnimation
 
+dt = 10
 nx =41
 L = 2;dx = L/(nx-1)
 x = np.linspace(0,L,nx)
@@ -16,13 +18,13 @@ T[nx-1] = T_right
 
 Tana = lambda x : T_left + (T_right - T_left)*x/L + S/(2*k)*x*(L-x)  
 
-def tran_heat_equ(nx):
-    S = 1e5;k = 150 ;rho = 2330 ; Cp = 750 
+def tran_heat_equ(nx, on_step = None , p_temp = None):
+    S = 1e3;k = 150 ;rho = 2330 ; Cp = 750 
     L = 2;dx = L/(nx-1)
 
     #alpha = k/(rho*Cp)
     #dt = 0.4*dx**2/alpha #11.65
-    dt = 10
+    dt = 10 #10
 
     T_left  = 100
     T_right = 100
@@ -32,37 +34,53 @@ def tran_heat_equ(nx):
     T[nx-1] = T_right
 
     niter = 1000
-    snap = [T.copy()]
+
+    if on_step:
+        on_step(0,T)
+
+    if p_temp:
+        p_temp(0,T[nx/2])
+
     for n in range(niter):
         Tn = T.copy()
         for i in range(nx-2):
             T[i+1] = Tn[i+1] + k*dt / (rho*Cp)/dx**2 * (Tn[i+2] - 2*Tn[i+1]+Tn[i]) + S*dt/(rho*Cp)
-        snap.append(T.copy())
+        if on_step:
+            on_step(n+1,T)
+        if p_temp:
+            p_temp((n+1)*dt,T[nx/2])
 
-    return T , snap
 
-    #for i in range(nx):
+    return T
 
-T , snap = tran_heat_equ(nx)
+
+
+rec = snapshotrecorder()
+tRec = probRec()
+T  = tran_heat_equ(nx,on_step = rec , p_temp = tRec())
+animation_snapshot(x,rec.snap , filename = "heat_evo.gif")
+animation_snapshot(t,tRec.snap ,xlabel = "Time(s)", filename ="temp.gif" )
+
+
 
 # ========== animation
 
-ymin = min(s.min() for s in snap )
-ymax = max(s.max() for s in snap )
-
-fig,ax=plt.subplots()
-line,=ax.plot(x*1e3, snap[0], 'o-', ms=3)
-ax.set_xlabel("x (mm)"); ax.set_ylabel("T (°C)")
-#ax.set_ylim(99.5, 102)                  # 固定 y 軸,否則每幀重縮放會看起來沒在動
-ax.set_ylim(ymin - 5, ymax + 5)                  # 固定 y 軸,否則每幀重縮放會看起來沒在動
-title=ax.set_title("niter = 0")
-
-def update(n):
-    line.set_ydata(snap[n])
-    title.set_text(f"niter = {n}")
-    return line, title
-# interval
-anim=FuncAnimation(fig, update, frames=len(snap), interval=80, blit=False)
-anim.save("heat_evo.gif", writer="pillow", fps=15)   # 存成 GIF
+#ymin = min(s.min() for s in snap )
+#ymax = max(s.max() for s in snap )
+#
+#fig,ax=plt.subplots()
+#line,=ax.plot(x*1e3, snap[0], 'o-', ms=3)
+#ax.set_xlabel("x (mm)"); ax.set_ylabel("T (°C)")
+##ax.set_ylim(99.5, 102)                  # 固定 y 軸,否則每幀重縮放會看起來沒在動
+#ax.set_ylim(ymin - 5, ymax + 5)                  # 固定 y 軸,否則每幀重縮放會看起來沒在動
+#title=ax.set_title("niter = 0")
+#
+#def update(n):
+#    line.set_ydata(snap[n])
+#    title.set_text(f"niter = {n}")
+#    return line, title
+## interval
+#anim=FuncAnimation(fig, update, frames=len(snap), interval=80, blit=False)
+#anim.save("heat_evo.gif", writer="pillow", fps=15)   # 存成 GIF
 
 
