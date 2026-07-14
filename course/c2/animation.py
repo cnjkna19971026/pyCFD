@@ -11,13 +11,24 @@ class snapshotrecorder:
             self.snap.append(field.copy())
 
 class probRec:
-    def __init__(self,i_probe = pot, rec_step = 1 ):
-        self.sanp = [ ]
-        self.stride = stride
-    def __call__ (self,n*dt,field[i_probe]):
-        if n*dt % self.rec_step == 0:
-            self.snap.append(field[i_probe].copy())
+    def __init__(self,i_probe, dt):
+        self.i_probe = i_probe
+        self.dt = dt
+        self.t_hist = [ ]
+        self.T_hist = [ ]
+
+    def __call__ (self,n ,field):
+        self.t_hist.append(n*self.dt) 
+        self.T_hist.append(field[self.i_probe])
             
+def plt_proRec(t_hist,T_hist):
+    plt.plot(t_hist,T_hist)
+    plt.xlabel("Time(s)")
+    plt.xlabel("Temperature(C)")
+    plt.show()
+
+
+
 def animation_snapshot(x, snap, 
                       filename="evolution.gif",
                       xlabel="x (mm)", 

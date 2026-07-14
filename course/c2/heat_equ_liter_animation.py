@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time,sys
-from animation import snapshotrecorder , animation_snapshot, probRec
+from animation import snapshotrecorder , animation_snapshot, probRec , plt_proRec
 
 from matplotlib.animation import FuncAnimation
 
@@ -18,7 +18,7 @@ T[nx-1] = T_right
 
 Tana = lambda x : T_left + (T_right - T_left)*x/L + S/(2*k)*x*(L-x)  
 
-def tran_heat_equ(nx, on_step = None , p_temp = None):
+def tran_heat_equ(nx, on_step = None ):
     S = 1e3;k = 150 ;rho = 2330 ; Cp = 750 
     L = 2;dx = L/(nx-1)
 
@@ -38,17 +38,12 @@ def tran_heat_equ(nx, on_step = None , p_temp = None):
     if on_step:
         on_step(0,T)
 
-    if p_temp:
-        p_temp(0,T[nx/2])
-
     for n in range(niter):
         Tn = T.copy()
         for i in range(nx-2):
             T[i+1] = Tn[i+1] + k*dt / (rho*Cp)/dx**2 * (Tn[i+2] - 2*Tn[i+1]+Tn[i]) + S*dt/(rho*Cp)
         if on_step:
             on_step(n+1,T)
-        if p_temp:
-            p_temp((n+1)*dt,T[nx/2])
 
 
     return T
@@ -56,11 +51,12 @@ def tran_heat_equ(nx, on_step = None , p_temp = None):
 
 
 rec = snapshotrecorder()
-tRec = probRec()
-T  = tran_heat_equ(nx,on_step = rec , p_temp = tRec())
+T  = tran_heat_equ(nx,on_step = rec )
 animation_snapshot(x,rec.snap , filename = "heat_evo.gif")
-animation_snapshot(t,tRec.snap ,xlabel = "Time(s)", filename ="temp.gif" )
 
+tRec = probRec(i_probe = nx //2 , dt = 10)
+T  = tran_heat_equ(nx,on_step = tRec)
+plt_proRec(tRec.t_hist,tRec.T_hist)
 
 
 # ========== animation
