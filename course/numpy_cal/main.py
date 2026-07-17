@@ -1,5 +1,5 @@
 import numpy as np
-from timeit import timeit
+from timecal import timeit
 
 #u = np.array((0,1,2,3,4,5))
 #
@@ -11,8 +11,8 @@ from timeit import timeit
 #
 L =2
 t = 10
-nx = 11
-ny = 11 
+nx = 81# 81 
+ny = 81# 81 
 nt = 100
 c = 1 
 sigma = 0.2
@@ -20,27 +20,27 @@ dx = L/(nx-1)
 dy = L/(ny-1)
 u = np.ones(nx)
 print("123")
+
 def func_1():
     L =2
-    t = 1
-    nx = 11
-    ny = 11 
-    nt = 10
+    t = 10
+    nx = 81
+    ny = 81 
+    nt = 100
     c = 1 
     sigma = 0.2
     dx = L/(nx-1) 
     dy = L/(ny-1)
-    u = np.ones(nx)
     dt_x = sigma * dx 
     dt_y = sigma * dy 
     
     x = np.linspace(0,L , nx)
     y = np.linspace(0,L , ny)
     
-    u = np.full((ny,nx),3)
+    u = np.full((ny,nx),3 , dtype = float)
     un = u.copy()
     
-    u[int(0.5/dy):int(1/dy +1),int(0.5/dx):int(1/dx)] = 1.5
+    u[int(0.5/dy):int(1/dy +1),int(0.5/dx):int(1/dx + 1)] = 1.5
     
     for n in range(1,nt+1):
         un = u.copy()
@@ -58,27 +58,26 @@ def func_1():
 
 def func_2(): 
     L =2
-    t = 1
-    nx = 11
-    ny = 11 
-    nt = 10
+    t = 10
+    nx = 81
+    ny = 81 
+    nt = 100
     c = 1 
     sigma = 0.2
     dx = L/(nx-1) 
     dy = L/(ny-1)
-    u = np.ones(nx)
     dt_x = sigma * dx 
     dt_y = sigma * dy 
     
     x = np.linspace(0,L , nx)
     y = np.linspace(0,L , ny)
     
-    u = np.full((ny,nx),1)
+    u = np.full((ny,nx),1, dtype =float)
     un = u.copy()
     
-    u[int(0.5/dy):int(1/dy +1),int(0.5/dx):int(1/dx)] = 2
+    u[int(0.5/dy):int(1/dy +1),int(0.5/dx):int(1/dx + 1)] = 2
     
-    for n in range(1,nt+1):
+    for n in range(nt+1):
         un = u.copy()
         u[1:,1:] = un[1:,1:] - (c*dt_x/dx*(un[1:,1:] - un[1:,0:-1])) - (c*dt_y/dy*(un[1:,1:]-un[0:-1,1:]))
         u[0, :] = 1
@@ -86,8 +85,14 @@ def func_2():
         u[:, 0] = 1
         u[:, -1] = 1
 
-
     return u
 
-#timeit(func_2)
+def myprint(string):
+    print(f"{string}")
+    return string
+test = 
+
+timeit(myprint,"hello")
+timeit(myprint("hello"))
+timeit(func_2)
 timeit(func_1)
