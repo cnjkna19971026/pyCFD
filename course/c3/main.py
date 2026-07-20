@@ -21,7 +21,7 @@ import time,sys
 
 
 
-def wave_equ(nx, L = 2,nt = 10,nu=0.3,sigma = 0.5,u_left = 3.0,_u = 3,u_high, x_start,x_end):
+def wave_equ(nx, L = 2,nt = 10,nu=0.3,sigma = 0.5,u_left = 3.0,_u = 3,u_high = 2, x_start = 0.5,x_end = 1):
     dx = L/(nx-1)
     u = np.full(nx,_u)
     un = np.ones(nx)
@@ -74,6 +74,25 @@ def diffusion_equ(nx):
 
     return x , u 
 
+def diffusion_equ_2(nx):
+    L = 2
+    dx = L/(nx-1)
+    nt = 10
+    u = np.full(nx,3.0)
+    un = np.full(nx,3.0)
+    nu = 0.3 
+
+    sigma = 0.2
+    dt = sigma*(dx**2)/nu
+    
+    u[int(0.5/dx):int(1.0/dx)]=1
+    
+    for n in range (nt):
+        un = u.copy()
+        u[1:-1] = un[1:-1] + nu*dt/(dx**2)*(un[2:]-2*un[1:-1]+un[0:-2])
+    x = np.linspace(0,2,nx)
+
+    return x , u 
 
 
 
@@ -83,13 +102,13 @@ fig,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2,figsize=(12,5))
 figlist = [ax1,ax2,ax3,ax4]
 
 for ax ,i in zip(figlist[0:2],nlist):
-    x , u = wave_equ(i)
+    x , u = diffusion_equ(i)
     ax.plot(x,u,'-k',marker='x',ms = 2.5,label=f"{i} liter wave_equ")
     ax.legend();ax.set_xlabel("x (m)");ax.set_ylabel("u (m/s)")
 
 
 for ax ,i in zip(figlist[2:4],nlist):
-    x , u = diffusion_equ(i)
+    x , u = diffusion_equ_2(i)
     ax.plot(x,u,'-k',marker='x',ms = 2.5,label=f"{i} liter wave_equ")
     ax.legend();ax.set_xlabel("x (m)");ax.set_ylabel("u (m/s)")
 
